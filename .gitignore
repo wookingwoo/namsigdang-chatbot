@@ -1,0 +1,4 @@
+nohup.out
+packages/namsigdang-skill-server/data/
+packages/namsigdang-skill-server/log/
+packages/namsigdang-skill-server/index.js
