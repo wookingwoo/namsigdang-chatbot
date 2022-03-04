@@ -1,17 +1,24 @@
 {
-  "name": "skill-server-example",
-  "version": "0.0.1",
-  "description": "skill server example",
+  "name": "namsigdang_chatbot",
+  "version": "2.0.0",
+  "description": "namsigdag-chatbot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wookingwoo/namsigdang_chatbot.git"
+  },
+  "author": "wookingwoo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wookingwoo/namsigdang_chatbot/issues"
+  },
+  "homepage": "https://github.com/wookingwoo/namsigdang_chatbot#readme",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "forever": "^1.0.0",
-    "morgan": "^1.9.1"
+    "body-parser": "^1.19.2",
+    "express": "^4.17.3",
+    "morgan": "^1.10.0"
   }
 }
