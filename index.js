@@ -68,7 +68,7 @@ apiRouter.post("/money", function (req, res) {
   res.status(200).send(responseBody);
 });
 
-// ============== 급식봇 ==============
+// ============== 남식당 급식봇 ==============
 apiRouter.post("/menu", function (req, res) {
   console.log("\n<req.body 출력> ");
   console.log(req.body);
