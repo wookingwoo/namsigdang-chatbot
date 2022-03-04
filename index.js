@@ -77,27 +77,29 @@ apiRouter.post("/menu", function (req, res) {
   console.log("block_id: " + block_id);
   console.log("typeof(block_id): " + typeof block_id);
 
+  var real_string_date;
+
   if (block_id == "5c9766875f38dd476721bbd2") {
     console.log("< main_식단 알림 >");
     var str_body_date = req.body.action.params.date.toString();
     var json_body_date = JSON.parse(str_body_date);
-    var real_string_date = json_body_date.date;
+    real_string_date = json_body_date.date;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   } else if (block_id == "5cb451475f38dd0eeb9c9eaa") {
     console.log("< 날짜 선택 오타 >");
     var str_body_date = req.body.action.params.date.toString();
     var json_body_date = JSON.parse(str_body_date);
-    var real_string_date = json_body_date.value;
+    real_string_date = json_body_date.value;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   } else if (block_id == "5cb464ba5f38dd0eeb9c9efd") {
     console.log("< 플러그인 선택 >");
     var str_body_date = req.body.action.params.date.toString();
     var json_body_date = JSON.parse(str_body_date);
-    var real_string_date = json_body_date.value;
+    real_string_date = json_body_date.value;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   } else {
     console.log("< 블록을 찾지 못했습니다. >");
-    var real_string_date = "2000-01-01";
+    real_string_date = "2000-01-01";
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   }
 
@@ -222,9 +224,6 @@ apiRouter.post("/menu", function (req, res) {
         selectedBreakfastMenu: selectedBreakfastMenu,
         selectedLunchMenu: selectedLunchMenu,
         selectedDinnerMenu: selectedDinnerMenu,
-
-        msg: "HI",
-        test: "테스트 입니다.",
       },
     };
 
