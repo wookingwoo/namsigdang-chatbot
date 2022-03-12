@@ -147,25 +147,17 @@ apiRouter.post("/menu", async function (req, res) {
   console.log("사용자: " + user_name);
   console.log("사용자 ID: " + user_id);
 
-  // 파일 쓰기
-  var fs = require("fs");
+  // 사용자 정보 업데이트
+  const user_info = db.collection("chatbot_user").doc(user_id);
 
-  const error_handler2 = function (error) {
-    if (error) console.log(error);
-    else console.log("user_id.txt 쓰기 성공!");
-  };
-
-  fs.appendFile(
-    "./data/user_id.txt",
-    new Date() +
-      "\n사용자: " +
-      user_name +
-      "\n" +
-      "사용자 ID: " +
-      user_id +
-      "\n\n",
-    "utf8",
-    error_handler2
+  const res_user_update = await user_info.set(
+    {
+      usage_count: FieldValue.increment(1),
+      recent_visit_date: FieldValue.serverTimestamp(),
+      recent_menu_inquiry_date: "2022-03-12",
+      // user_segmentation: null,
+    },
+    { merge: true }
   );
 
   var week_name = new Array(
@@ -305,7 +297,7 @@ apiRouter.post("/fb-auth-test", async function (req, res) {
   var user_code = "test1";
   // var user_code = "user_code";
 
-  const user_info = db.collection("user").doc(user_code);
+  const user_info = db.collection("chatbot_user").doc(user_code);
 
   const res2 = await user_info.set(
     {
