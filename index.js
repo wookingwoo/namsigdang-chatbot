@@ -91,7 +91,7 @@ apiRouter.post("/money", function (req, res) {
 });
 
 // ============== 남식당 급식봇 ==============
-apiRouter.post("/menu", function (req, res) {
+apiRouter.post("/menu", async function (req, res) {
   console.log("\n<req.body 출력> ");
   console.log(req.body);
 
@@ -194,63 +194,75 @@ apiRouter.post("/menu", function (req, res) {
     error_handler
   );
 
-  var changeNamdoCode =
-    "eu" +
-    real_string_date.substr(0, 4) +
-    real_string_date.substr(5, 2) +
-    real_string_date.substr(8, 2);
+  let namdo_code_year = real_string_date.substr(0, 4); // 2022
+  let namdo_code_month = real_string_date.substr(5, 2); // 03
+  let namdo_code_date = real_string_date.substr(8, 2); // 05
+
+  let changeNamdoCode =
+    "eu" + namdo_code_year + namdo_code_month + namdo_code_date;
   console.log("남도 코드: " + changeNamdoCode);
 
-  //파일 읽기
-  var path_all_menu_txt = "./data/test_data/all_menu.txt";
+  // /menu/Eunpyeong/year_2022/month_03
+  const menu_fs = db
+    .collection("menu")
+    .doc("Eunpyeong")
+    .collection("year_" + namdo_code_year)
+    .doc("month_" + namdo_code_month);
+  const menu_doc = await menu_fs.get();
 
-  var fs = require("fs");
+  var menuJson = {};
+  if (!menu_doc.exists) {
+    console.log("No such document!");
+  } else {
+    // console.log("Document data:", menu_doc.data());
+    menuJson = menu_doc.data();
+  }
 
-  fs.readFile(path_all_menu_txt, "utf8", function (err, data) {
-    data = data.replace(/\'/gi, '"');
-    data = data.replace(/\//gi, "&");
-    // 오류나면 path_all_menu_txt 경로를 확인해주세요.
+  var selectedBreakfastMenu = menuJson[changeNamdoCode + "a"]
+    .replace(/\//gi, "&")
+    .replace(/,/gi, ", ");
+  var selectedLunchMenu = menuJson[changeNamdoCode + "b"]
+    .replace(/\//gi, "&")
+    .replace(/,/gi, ", ");
+  var selectedDinnerMenu = menuJson[changeNamdoCode + "c"]
+    .replace(/\//gi, "&")
+    .replace(/,/gi, ", ");
 
-    var menuJson = JSON.parse(data);
+  var error_msg_1 = "식단정보가 없습니다.";
+  var error_msg_2 = "식단정보를 찾을 수 없습니다.";
 
-    var selectedBreakfastMenu = menuJson[changeNamdoCode + "a"];
-    var selectedLunchMenu = menuJson[changeNamdoCode + "b"];
-    var selectedDinnerMenu = menuJson[changeNamdoCode + "c"];
+  if (selectedBreakfastMenu == "") {
+    selectedBreakfastMenu = error_msg_1;
+  } else if (selectedBreakfastMenu == null) {
+    selectedBreakfastMenu = error_msg_2;
+  }
 
-    var error_msg_1 = "식단정보가 없습니다.";
-    var error_msg_2 = "식단정보를 찾을 수 없습니다.";
+  if (selectedLunchMenu == "") {
+    selectedLunchMenu = error_msg_1;
+  } else if (selectedLunchMenu == null) {
+    selectedLunchMenu = error_msg_2;
+  }
 
-    if (selectedBreakfastMenu == "") {
-      selectedBreakfastMenu = error_msg_1;
-    } else if (selectedBreakfastMenu == null) {
-      selectedBreakfastMenu = error_msg_2;
-    }
+  if (selectedDinnerMenu == "") {
+    selectedDinnerMenu = error_msg_1;
+  } else if (selectedDinnerMenu == null) {
+    selectedDinnerMenu = error_msg_2;
+  }
 
-    if (selectedLunchMenu == "") {
-      selectedLunchMenu = error_msg_1;
-    } else if (selectedLunchMenu == null) {
-      selectedLunchMenu = error_msg_2;
-    }
+  const responseBody = {
+    version: "2.0",
+    data: {
+      selectedDate: selectedDate,
 
-    if (selectedDinnerMenu == "") {
-      selectedDinnerMenu = error_msg_1;
-    } else if (selectedDinnerMenu == null) {
-      selectedDinnerMenu = error_msg_2;
-    }
+      selectedBreakfastMenu: selectedBreakfastMenu,
+      selectedLunchMenu: selectedLunchMenu,
+      selectedDinnerMenu: selectedDinnerMenu,
+    },
+  };
 
-    const responseBody = {
-      version: "2.0",
-      data: {
-        selectedDate: selectedDate,
+  console.log("responseBody:", responseBody);
 
-        selectedBreakfastMenu: selectedBreakfastMenu,
-        selectedLunchMenu: selectedLunchMenu,
-        selectedDinnerMenu: selectedDinnerMenu,
-      },
-    };
-
-    res.status(200).send(responseBody);
-  });
+  res.status(200).send(responseBody);
 });
 
 apiRouter.post("/fbtest", async function (req, res) {
