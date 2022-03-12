@@ -94,6 +94,7 @@ apiRouter.post("/money", function (req, res) {
 // ============== 남식당 급식봇 ==============
 apiRouter.post("/menu", async function (req, res) {
   console.log("\n<req.body 출력> ");
+
   console.log(req.body);
 
   let today = new Date();
@@ -112,7 +113,7 @@ apiRouter.post("/menu", async function (req, res) {
   request_log_dir = request_log_dir + "/log";
   check_and_make_dir(request_log_dir);
 
-  request_log_dir = request_log_dir + "/request_log";
+  request_log_dir = request_log_dir + "/request_body_log";
   check_and_make_dir(request_log_dir);
 
   request_log_dir = request_log_dir + `/year_${now_year}`;
@@ -122,7 +123,8 @@ apiRouter.post("/menu", async function (req, res) {
   check_and_make_dir(request_log_dir);
 
   request_log_dir =
-    request_log_dir + `/${now_year}.${now_month}.${now_date}_request_logs.txt`;
+    request_log_dir +
+    `/${now_year}.${now_month}.${now_date}_request_body_logs.txt`;
 
   // 로그 파일 쓰기
   const error_handler = function (error) {
