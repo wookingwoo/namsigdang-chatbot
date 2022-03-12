@@ -92,6 +92,7 @@ apiRouter.post("/money", function (req, res) {
 });
 
 // ============== 남식당 급식봇 ==============
+// 에러처리필요: 요청값 날짜 파라미터 없는경우 예외처리하기
 apiRouter.post("/menu", async function (req, res) {
   console.log("\n<req.body 출력> ");
 
