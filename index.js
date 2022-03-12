@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const logger = require("morgan");
 const bodyParser = require("body-parser");
+var fs = require("fs");
 
 // firebase 시작
 const {
@@ -95,17 +96,43 @@ apiRouter.post("/menu", async function (req, res) {
   console.log("\n<req.body 출력> ");
   console.log(req.body);
 
-  // 로그 파일 쓰기
-  var fs = require("fs");
+  let today = new Date();
 
+  let now_year = today.getFullYear(); // 현재 년도
+  var now_month = today.getMonth() + 1; // 현재 월
+  var now_date = today.getDate(); // 현재 날짜
+  let now_day = today.getDay(); // 현재 요일
+
+  now_month = makeTwoNumber(now_month); // 2자리로 표현 (0붙임)
+  now_date = makeTwoNumber(now_date); // 2자리로 표현 (0붙임)
+
+  var request_log_dir = "./data";
+  check_and_make_dir(request_log_dir);
+
+  request_log_dir = request_log_dir + "/log";
+  check_and_make_dir(request_log_dir);
+
+  request_log_dir = request_log_dir + "/request_log";
+  check_and_make_dir(request_log_dir);
+
+  request_log_dir = request_log_dir + `/year_${now_year}`;
+  check_and_make_dir(request_log_dir);
+
+  request_log_dir = request_log_dir + `/mounth_${now_month}`;
+  check_and_make_dir(request_log_dir);
+
+  request_log_dir =
+    request_log_dir + `/${now_year}.${now_month}.${now_date}_request_logs.txt`;
+
+  // 로그 파일 쓰기
   const error_handler = function (error) {
     if (error) console.log(error);
     else console.log("log.txt 쓰기 성공!");
   };
 
   fs.appendFile(
-    "./log/menu/log.txt",
-    "\n\n\n" + JSON.stringify(req.body),
+    request_log_dir,
+    "\n\n" + JSON.stringify(req.body),
     "utf8",
     error_handler
   );
@@ -250,6 +277,23 @@ apiRouter.post("/menu", async function (req, res) {
 
   res.status(200).send(responseBody);
 });
+
+function check_and_make_dir(dir_path) {
+  // 로그 파일 경로 존재여부 체크
+  const check_log_dir = fs.existsSync(dir_path);
+
+  // 로그파일 경로가 존재하면 true, 없으면 false
+  console.log("로그파일 경로 존재 여부:", check_log_dir);
+
+  // 경로가 존재하지 않는경우 새로 생성
+  if (!check_log_dir) fs.mkdirSync(dir_path);
+}
+
+function makeTwoNumber(variable) {
+  variable = Number(variable).toString();
+  if (Number(variable) < 10 && variable.length == 1) variable = "0" + variable;
+  return variable;
+}
 
 apiRouter.post("/fb-fs-test", async function (req, res) {
   // /menu/Eunpyeong/year_2022/month_03
