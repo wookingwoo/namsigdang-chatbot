@@ -129,17 +129,19 @@ apiRouter.post("/menu", async function (req, res) {
   console.log("user_id: " + user_id);
   console.log("typeof user_id: " + typeof user_id);
 
+  var user_name;
+
   switch (user_id) {
     case "test1":
-      var user_name = "test1";
+      user_name = "test1";
       break;
 
     case "test2":
-      var user_name = "test2";
+      user_name = "test2";
       break;
 
     default:
-      var user_name = "일반 유저";
+      user_name = "일반 유저";
   }
 
   console.log("사용자: " + user_name);
@@ -265,7 +267,7 @@ apiRouter.post("/menu", async function (req, res) {
   res.status(200).send(responseBody);
 });
 
-apiRouter.post("/fbtest", async function (req, res) {
+apiRouter.post("/fb-fs-test", async function (req, res) {
   // /menu/Eunpyeong/year_2022/month_03
   const menu_fs = db
     .collection("menu")
@@ -290,6 +292,38 @@ apiRouter.post("/fbtest", async function (req, res) {
           simpleText: {
             text: "fbtest!!",
             menu_data: menu_data,
+          },
+        },
+      ],
+    },
+  };
+
+  res.status(200).send(responseBody);
+});
+
+apiRouter.post("/fb-auth-test", async function (req, res) {
+  var user_code = "test1";
+  // var user_code = "user_code";
+
+  const user_info = db.collection("user").doc(user_code);
+
+  const res2 = await user_info.set(
+    {
+      usage_count: FieldValue.increment(1),
+      // user_segmentation: null,
+      recent_visit_date: FieldValue.serverTimestamp(),
+      recent_menu_inquiry_date: "2022-03-12",
+    },
+    { merge: true }
+  );
+
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          simpleText: {
+            text: "fb-auth-test!!",
           },
         },
       ],
