@@ -148,17 +148,29 @@ apiRouter.post("/menu", async function (req, res) {
   console.log("사용자 ID: " + user_id);
 
   // 사용자 정보 업데이트
+
   const user_info = db.collection("chatbot_user").doc(user_id);
 
-  const res_user_update = await user_info.set(
-    {
-      usage_count: FieldValue.increment(1),
-      recent_visit_date: FieldValue.serverTimestamp(),
-      recent_menu_inquiry_date: "2022-03-12",
-      // user_segmentation: null,
-    },
-    { merge: true }
-  );
+  const user_id_doc = await user_info.get();
+  if (!user_id_doc.exists) {
+    console.log("No such user_id_document, so make new user_info!");
+
+    const res_userinfo_default = await user_info.set(
+      {
+        user_segmentation: null,
+        join_date: FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+  } else {
+    // console.log("user_id_document data(기존데이터):", user_id_doc.data());
+  }
+
+  const res_update_userinfo = await user_info.update({
+    usage_count: FieldValue.increment(1),
+    recent_visit_date: FieldValue.serverTimestamp(),
+    recent_menu_inquiry_date: "2022-03-12",
+  });
 
   var week_name = new Array(
     "일요일",
@@ -294,20 +306,31 @@ apiRouter.post("/fb-fs-test", async function (req, res) {
 });
 
 apiRouter.post("/fb-auth-test", async function (req, res) {
-  var user_code = "test1";
+  var user_code = "test3";
   // var user_code = "user_code";
 
   const user_info = db.collection("chatbot_user").doc(user_code);
 
-  const res2 = await user_info.set(
-    {
-      usage_count: FieldValue.increment(1),
-      // user_segmentation: null,
-      recent_visit_date: FieldValue.serverTimestamp(),
-      recent_menu_inquiry_date: "2022-03-12",
-    },
-    { merge: true }
-  );
+  const user_id_doc = await user_info.get();
+  if (!user_id_doc.exists) {
+    console.log("No such user_id_document, so make new user_info!");
+
+    const res2 = await user_info.set(
+      {
+        user_segmentation: null,
+        join_date: FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+  } else {
+    // console.log("user_id_document data(기존데이터):", user_id_doc.data());
+  }
+
+  const res3 = await user_info.update({
+    usage_count: FieldValue.increment(1),
+    recent_visit_date: FieldValue.serverTimestamp(),
+    recent_menu_inquiry_date: "2022-03-12",
+  });
 
   const responseBody = {
     version: "2.0",
