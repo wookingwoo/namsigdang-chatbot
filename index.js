@@ -3,6 +3,28 @@ const app = express();
 const logger = require("morgan");
 const bodyParser = require("body-parser");
 
+// firebase 시작
+const {
+  initializeApp,
+  applicationDefault,
+  cert,
+} = require("firebase-admin/app");
+const {
+  getFirestore,
+  Timestamp,
+  FieldValue,
+} = require("firebase-admin/firestore");
+
+const serviceAccount = require("./data/firebase-IAM-key/namsigdang-crawler-firebase-adminsdk.json");
+
+initializeApp({
+  credential: cert(serviceAccount),
+});
+
+const db = getFirestore();
+
+// firebase 끝
+
 const apiRouter = express.Router();
 
 app.use(logger("dev", {}));
@@ -231,6 +253,44 @@ apiRouter.post("/menu", function (req, res) {
   });
 });
 
-app.listen(3000, function () {
-  console.log("NamSigDang_kakao_chatbot skill server listening on port 3000!");
+apiRouter.post("/fbtest", async function (req, res) {
+  // /menu/Eunpyeong/year_2022/month_03
+  const menu_fs = db
+    .collection("menu")
+    .doc("Eunpyeong")
+    .collection("year_2022")
+    .doc("month_03");
+  const menu_doc = await menu_fs.get();
+
+  var menu_data = {};
+  if (!menu_doc.exists) {
+    console.log("No such document!");
+  } else {
+    console.log("Document data:", menu_doc.data());
+    menu_data = menu_doc.data();
+  }
+
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          simpleText: {
+            text: "fbtest!!",
+            menu_data: menu_data,
+          },
+        },
+      ],
+    },
+  };
+
+  res.status(200).send(responseBody);
+});
+
+let port_num = 3000;
+
+app.listen(port_num, function () {
+  console.log(
+    `NamSigDang_kakao_chatbot skill server listening on port ${port_num}!`
+  );
 });
