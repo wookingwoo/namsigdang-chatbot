@@ -95,6 +95,21 @@ apiRouter.post("/menu", async function (req, res) {
   console.log("\n<req.body 출력> ");
   console.log(req.body);
 
+  // 로그 파일 쓰기
+  var fs = require("fs");
+
+  const error_handler = function (error) {
+    if (error) console.log(error);
+    else console.log("log.txt 쓰기 성공!");
+  };
+
+  fs.appendFile(
+    "./log/menu/log.txt",
+    "\n\n\n" + JSON.stringify(req.body),
+    "utf8",
+    error_handler
+  );
+
   var block_id = req.body.intent.id;
   console.log("block_id: " + block_id);
   console.log("typeof(block_id): " + typeof block_id);
@@ -129,26 +144,27 @@ apiRouter.post("/menu", async function (req, res) {
   console.log("user_id: " + user_id);
   console.log("typeof user_id: " + typeof user_id);
 
-  var user_name;
+  var week_name = new Array(
+    "일요일",
+    "월요일",
+    "화요일",
+    "수요일",
+    "목요일",
+    "금요일",
+    "토요일"
+  );
+  var today_name = new Date(real_string_date).getDay();
+  var todayLabel = week_name[today_name];
+  var selectedDate = real_string_date + "-" + todayLabel;
 
-  switch (user_id) {
-    case "test1":
-      user_name = "test1";
-      break;
+  let namdo_code_year = real_string_date.substr(0, 4); // 2022
+  let namdo_code_month = real_string_date.substr(5, 2); // 03
+  let namdo_code_date = real_string_date.substr(8, 2); // 05
 
-    case "test2":
-      user_name = "test2";
-      break;
-
-    default:
-      user_name = "일반 유저";
-  }
-
-  console.log("사용자: " + user_name);
-  console.log("사용자 ID: " + user_id);
+  let namdo_code = "eu" + namdo_code_year + namdo_code_month + namdo_code_date;
+  console.log("남도 코드: " + namdo_code);
 
   // 사용자 정보 업데이트
-
   const user_info = db.collection("chatbot_user").doc(user_id);
 
   const user_id_doc = await user_info.get();
@@ -169,44 +185,8 @@ apiRouter.post("/menu", async function (req, res) {
   const res_update_userinfo = await user_info.update({
     usage_count: FieldValue.increment(1),
     recent_visit_date: FieldValue.serverTimestamp(),
-    recent_menu_inquiry_date: "2022-03-12",
+    recent_menu_inquiry_date: namdo_code,
   });
-
-  var week_name = new Array(
-    "일요일",
-    "월요일",
-    "화요일",
-    "수요일",
-    "목요일",
-    "금요일",
-    "토요일"
-  );
-  var today_name = new Date(real_string_date).getDay();
-  var todayLabel = week_name[today_name];
-  var selectedDate = real_string_date + "-" + todayLabel;
-
-  // 파일 쓰기
-  var fs = require("fs");
-
-  const error_handler = function (error) {
-    if (error) console.log(error);
-    else console.log("log.txt 쓰기 성공!");
-  };
-
-  fs.appendFile(
-    "./log/menu/log.txt",
-    "\n\n\n" + JSON.stringify(req.body),
-    "utf8",
-    error_handler
-  );
-
-  let namdo_code_year = real_string_date.substr(0, 4); // 2022
-  let namdo_code_month = real_string_date.substr(5, 2); // 03
-  let namdo_code_date = real_string_date.substr(8, 2); // 05
-
-  let changeNamdoCode =
-    "eu" + namdo_code_year + namdo_code_month + namdo_code_date;
-  console.log("남도 코드: " + changeNamdoCode);
 
   // /menu/Eunpyeong/year_2022/month_03
   const menu_fs = db
@@ -224,13 +204,13 @@ apiRouter.post("/menu", async function (req, res) {
     menuJson = menu_doc.data();
   }
 
-  var selectedBreakfastMenu = menuJson[changeNamdoCode + "a"]
+  var selectedBreakfastMenu = menuJson[namdo_code + "a"]
     .replace(/\//gi, "&")
     .replace(/,/gi, ", ");
-  var selectedLunchMenu = menuJson[changeNamdoCode + "b"]
+  var selectedLunchMenu = menuJson[namdo_code + "b"]
     .replace(/\//gi, "&")
     .replace(/,/gi, ", ");
-  var selectedDinnerMenu = menuJson[changeNamdoCode + "c"]
+  var selectedDinnerMenu = menuJson[namdo_code + "c"]
     .replace(/\//gi, "&")
     .replace(/,/gi, ", ");
 
