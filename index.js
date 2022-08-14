@@ -36,7 +36,7 @@ app.use(
     })
 );
 
-app.use("/api", apiRouter);
+app.use("/api/v1.2", apiRouter);
 
 apiRouter.post("/sayHello", function (req, res) {
     const responseBody = {
