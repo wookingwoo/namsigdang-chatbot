@@ -94,6 +94,8 @@ apiRouter.post("/money", function (req, res) {
 // ============== 남식당 급식봇 ==============
 // 에러처리필요: 요청값 날짜 파라미터 없는경우 예외처리하기
 apiRouter.post("/menu", async function (req, res) {
+  let json_body_date;
+  let str_body_date;
   console.log("\n<req.body 출력> ");
 
   console.log(req.body);
@@ -146,22 +148,22 @@ apiRouter.post("/menu", async function (req, res) {
 
   var real_string_date;
 
-  if (block_id == "5c9766875f38dd476721bbd2") {
+  if (block_id === "5c9766875f38dd476721bbd2") {
     console.log("< main_식단 알림 >");
-    var str_body_date = req.body.action.params.date.toString();
-    var json_body_date = JSON.parse(str_body_date);
+    str_body_date = req.body.action.params.date.toString();
+    json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.date;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
-  } else if (block_id == "5cb451475f38dd0eeb9c9eaa") {
+  } else if (block_id === "5cb451475f38dd0eeb9c9eaa") {
     console.log("< 날짜 선택 오타 >");
-    var str_body_date = req.body.action.params.date.toString();
-    var json_body_date = JSON.parse(str_body_date);
+    str_body_date = req.body.action.params.date.toString();
+    json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.value;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
-  } else if (block_id == "5cb464ba5f38dd0eeb9c9efd") {
+  } else if (block_id === "5cb464ba5f38dd0eeb9c9efd") {
     console.log("< 플러그인 선택 >");
-    var str_body_date = req.body.action.params.date.toString();
-    var json_body_date = JSON.parse(str_body_date);
+    str_body_date = req.body.action.params.date.toString();
+    json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.value;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   } else {
@@ -174,18 +176,16 @@ apiRouter.post("/menu", async function (req, res) {
   console.log("user_id: " + user_id);
   console.log("typeof user_id: " + typeof user_id);
 
-  var week_name = new Array(
-    "일요일",
-    "월요일",
-    "화요일",
-    "수요일",
-    "목요일",
-    "금요일",
-    "토요일"
-  );
-  var today_name = new Date(real_string_date).getDay();
-  var todayLabel = week_name[today_name];
-  var selectedDate = real_string_date + "-" + todayLabel;
+  const week_name = ["일요일",
+      "월요일",
+      "화요일",
+      "수요일",
+      "목요일",
+      "금요일",
+      "토요일"];
+  const today_name = new Date(real_string_date).getDay();
+  const todayLabel = week_name[today_name];
+  const selectedDate = real_string_date + "-" + todayLabel;
 
   let namdo_code_year = real_string_date.substr(0, 4); // 2022
   let namdo_code_month = real_string_date.substr(5, 2); // 03
@@ -226,7 +226,7 @@ apiRouter.post("/menu", async function (req, res) {
     .doc("month_" + namdo_code_month);
   const menu_doc = await menu_fs.get();
 
-  var menuJson = {};
+  let menuJson = {};
   if (!menu_doc.exists) {
     console.log("No such document!");
   } else {
@@ -234,32 +234,32 @@ apiRouter.post("/menu", async function (req, res) {
     menuJson = menu_doc.data();
   }
 
-  var selectedBreakfastMenu = menuJson[namdo_code + "a"]
-    .replace(/\//gi, "&")
-    .replace(/,/gi, ", ");
-  var selectedLunchMenu = menuJson[namdo_code + "b"]
-    .replace(/\//gi, "&")
-    .replace(/,/gi, ", ");
-  var selectedDinnerMenu = menuJson[namdo_code + "c"]
-    .replace(/\//gi, "&")
-    .replace(/,/gi, ", ");
+  let selectedBreakfastMenu = menuJson[namdo_code + "a"]
+      .replace(/\//gi, "&")
+      .replace(/,/gi, ", ");
+  let selectedLunchMenu = menuJson[namdo_code + "b"]
+      .replace(/\//gi, "&")
+      .replace(/,/gi, ", ");
+  let selectedDinnerMenu = menuJson[namdo_code + "c"]
+      .replace(/\//gi, "&")
+      .replace(/,/gi, ", ");
 
-  var error_msg_1 = "식단정보가 없습니다.";
-  var error_msg_2 = "식단정보를 찾을 수 없습니다.";
+  const error_msg_1 = "식단정보가 없습니다.";
+  const error_msg_2 = "식단정보를 찾을 수 없습니다.";
 
-  if (selectedBreakfastMenu == "") {
+  if (selectedBreakfastMenu === "") {
     selectedBreakfastMenu = error_msg_1;
   } else if (selectedBreakfastMenu == null) {
     selectedBreakfastMenu = error_msg_2;
   }
 
-  if (selectedLunchMenu == "") {
+  if (selectedLunchMenu === "") {
     selectedLunchMenu = error_msg_1;
   } else if (selectedLunchMenu == null) {
     selectedLunchMenu = error_msg_2;
   }
 
-  if (selectedDinnerMenu == "") {
+  if (selectedDinnerMenu === "") {
     selectedDinnerMenu = error_msg_1;
   } else if (selectedDinnerMenu == null) {
     selectedDinnerMenu = error_msg_2;
@@ -294,7 +294,7 @@ function check_and_make_dir(dir_path) {
 
 function makeTwoNumber(variable) {
   variable = Number(variable).toString();
-  if (Number(variable) < 10 && variable.length == 1) variable = "0" + variable;
+  if (Number(variable) < 10 && variable.length === 1) variable = "0" + variable;
   return variable;
 }
 
