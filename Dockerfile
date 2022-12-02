@@ -20,5 +20,4 @@ EXPOSE 3000
 CMD [ "forever", "index.js" ]
 
 # docker build . -t namsigdang-chatbot:1.0
-# docker run -i -t -d -p 3000:3000 --name namsigdang-chatbot namsigdang-chatbot:1.0
-# docker run -p <host port number>:<container port number>/<protocol> [IMAGE NAME] [OTHER OPTIONS...]
+# docker run -i -t -d -p <host port number>:3000 --name namsigdang-chatbot --restart always namsigdang-chatbot:1.0
