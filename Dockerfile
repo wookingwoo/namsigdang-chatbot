@@ -18,6 +18,3 @@ EXPOSE 3000
 #컨테이너에서 실행될 명령을 지정
 #CMD [ "node", "index.js" ]
 CMD [ "forever", "index.js" ]
-
-# docker build . -t namsigdang-chatbot:1.0
-# docker run -i -t -d -p <host port number>:3000 --name namsigdang-chatbot --restart always namsigdang-chatbot:1.0
