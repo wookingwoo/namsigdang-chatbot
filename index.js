@@ -36,7 +36,7 @@ app.use(
     })
 );
 
-app.use("/api/v1.2", apiRouter);
+app.use("/api/v1.3", apiRouter);
 
 apiRouter.post("/sayHello", function (req, res) {
     const responseBody = {
@@ -94,6 +94,16 @@ apiRouter.post("/money", function (req, res) {
 // ============== 남식당 급식봇 ==============
 // 에러처리필요: 요청값 날짜 파라미터 없는경우 예외처리하기
 apiRouter.post("/menu", async function (req, res) {
+    var campus_code = "eu"; // v1.2 지원 위해서 은평관으로 초기화
+    var campus_name = "Eunpyeong"; // v1.2 지원 위해서 은평관으로 초기화
+
+    campus_code = req.query.campus;
+    console.log("campus_code: " + campus_code);
+
+    if (campus_code == "do") {
+        campus_name = "Dongjak";
+    }
+
     let json_body_date;
     let str_body_date;
     console.log("\n<req.body 출력> ");
@@ -176,13 +186,15 @@ apiRouter.post("/menu", async function (req, res) {
     console.log("user_id: " + user_id);
     console.log("typeof user_id: " + typeof user_id);
 
-    const week_name = ["일요일",
+    const week_name = [
+        "일요일",
         "월요일",
         "화요일",
         "수요일",
         "목요일",
         "금요일",
-        "토요일"];
+        "토요일",
+    ];
     const today_name = new Date(real_string_date).getDay();
     const todayLabel = week_name[today_name];
     const selectedDate = real_string_date + "-" + todayLabel;
@@ -191,7 +203,8 @@ apiRouter.post("/menu", async function (req, res) {
     let namdo_code_month = real_string_date.substr(5, 2); // 03
     let namdo_code_date = real_string_date.substr(8, 2); // 05
 
-    let namdo_code = "eu" + namdo_code_year + namdo_code_month + namdo_code_date;
+    let namdo_code =
+        campus_code + namdo_code_year + namdo_code_month + namdo_code_date;
     console.log("남도 코드: " + namdo_code);
 
     // 사용자 정보 업데이트
@@ -221,7 +234,7 @@ apiRouter.post("/menu", async function (req, res) {
     // /menu/Eunpyeong/year_2022/month_03
     const menu_fs = db
         .collection("menu")
-        .doc("Eunpyeong")
+        .doc(campus_name)
         .collection("year_" + namdo_code_year)
         .doc("month_" + namdo_code_month);
     const menu_doc = await menu_fs.get();
