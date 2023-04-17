@@ -94,14 +94,21 @@ apiRouter.post("/money", function (req, res) {
 // ============== 남식당 급식봇 ==============
 // 에러처리필요: 요청값 날짜 파라미터 없는경우 예외처리하기
 apiRouter.post("/menu", async function (req, res) {
-  var campus_code = "eu"; // v1.2 지원 위해서 은평관으로 초기화
-  var campus_name = "Eunpyeong"; // v1.2 지원 위해서 은평관으로 초기화
-
-  campus_code = req.query.campus;
+  const campus_code = req.query.campus;
+  var campus_name;
   console.log("campus_code: " + campus_code);
 
-  if (campus_code == "do") {
+  if (campus_code == "eu") {
+    campus_name = "Eunpyeong";
+  } else if (campus_code == "do") {
     campus_name = "Dongjak";
+  } else {
+    console.log("Query string 'campus' is not valid.");
+    res.status(400).send({
+      error_msg: "Query string 'campus' is not valid. Use 'eu' or 'do'.",
+      campus: campus_code,
+    });
+    return; // 에러 발생 시 함수 실행 중지
   }
 
   let json_body_date;
