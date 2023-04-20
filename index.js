@@ -168,8 +168,11 @@ apiRouter.post("/menu", async function (req, res) {
 
   var real_string_date;
 
-  if (block_id === "5c9766875f38dd476721bbd2") {
-    console.log("< main_식단 알림 >");
+  let eunpyeong_menu_block_id = "5c9766875f38dd476721bbd2";
+  let eunpyeong_menu_block_name = "main_은평관 식단 알림";
+
+  if (block_id === eunpyeong_menu_block_id) {
+    console.log("< " + eunpyeong_menu_block_name + " >");
     str_body_date = req.body.action.params.date.toString();
     json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.date;
