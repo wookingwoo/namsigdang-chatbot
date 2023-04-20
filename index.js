@@ -133,6 +133,9 @@ apiRouter.post("/menu", async function (req, res) {
   request_log_dir = request_log_dir + "/log";
   check_and_make_dir(request_log_dir);
 
+  request_log_dir = request_log_dir + "/" + campus_name;
+  check_and_make_dir(request_log_dir);
+
   request_log_dir = request_log_dir + "/request_body_log";
   check_and_make_dir(request_log_dir);
 
