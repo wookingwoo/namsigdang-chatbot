@@ -1,7 +1,14 @@
 # namsigdang-chatbot
 
-- namsigdang kakaotalk chatbot: https://pf.kakao.com/_SeKcj
+- namsigdang kakaotalk chatbot: <https://pf.kakao.com/_SeKcj>
 - contact namsigdang: contact@wookingwoo.com
+
+## Get started in local
+
+```bash
+npm install
+node index.js
+```
 
 ## Get started with Dockerfile
 

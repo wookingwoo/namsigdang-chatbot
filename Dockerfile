@@ -1,6 +1,6 @@
 FROM node:16
 
-MAINTAINER wookingwoo <contact@wookingwoo.com>
+LABEL maintainer="contact@wookingwoo.com"
 
 RUN mkdir -p /namsigdang_chatbot
 WORKDIR /namsigdang_chatbot
