@@ -206,12 +206,10 @@ apiRouter.post("/menu", async function (req, res) {
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   } else if (block_id === dongjak_menu_block_id) {
     console.log("< main_동작관 식단 알림 >");
-    console.log(
-      "req.body.action.detailParams: " + req.body.action.detailParams
-    );
-    console.log(
-      "req.body.action.detailParams.date: " + req.body.action.detailParams.date
-    );
+    console.log("[req.body.action.detailParams]:");
+    console.log(req.body.action.detailParams);
+    console.log("[req.body.action.detailParams.date]:");
+    console.log(req.body.action.detailParams.date);
     str_body_date = req.body.action.detailParams.date.toString();
     console.log("str_body_date: " + str_body_date);
     json_body_date = JSON.parse(str_body_date);
