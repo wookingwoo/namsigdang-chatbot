@@ -125,11 +125,12 @@ apiRouter.post("/menu", async function (req, res) {
     return; // 에러 발생 시 함수 실행 중지
   }
 
+  console.log("\n[req.body 시작]");
+  console.log(req.body);
+  console.log("[req.body 종료]\n");
+
   let json_body_date;
   let str_body_date;
-  console.log("\n<req.body 출력> ");
-
-  console.log(req.body);
 
   let today = new Date();
 
