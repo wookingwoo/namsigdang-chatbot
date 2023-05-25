@@ -21,7 +21,6 @@
     "dotenv": "^16.0.3",
     "express": "^4.17.3",
     "firebase-admin": "^10.0.2",
-    "morgan": "^1.10.0",
-    "replace": "^1.2.2"
+    "morgan": "^1.10.0"
   }
 }
