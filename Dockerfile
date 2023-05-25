@@ -10,8 +10,6 @@ ADD . /namsigdang_chatbot
 
 RUN npm install
 
-RUN npm install forever -g
-
 #가상 머신에 오픈할 포트
 EXPOSE 3000
 
