@@ -183,10 +183,10 @@ apiRouter.post("/menu", async function (req, res) {
   var real_string_date;
 
   let eunpyeong_menu_block_id = "5c9766875f38dd476721bbd2";
-  let eunpyeong_menu_block_name = "main_은평관 식단 알림";
+  let dongjak_menu_block_id = "64414f25e40e9c7542d74785";
 
   if (block_id === eunpyeong_menu_block_id) {
-    console.log("< " + eunpyeong_menu_block_name + " >");
+    console.log("< main_은평관 식단 알림 >");
     str_body_date = req.body.action.params.date.toString();
     json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.date;
@@ -203,6 +203,13 @@ apiRouter.post("/menu", async function (req, res) {
     json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.value;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
+  } else if (block_id === dongjak_menu_block_id) {
+    console.log("< main_동작관 식단 알림 >");
+    str_body_date = req.body.action.detailParams.date.toString();
+    console.log("str_body_date: " + str_body_date);
+    json_body_date = JSON.parse(str_body_date);
+    real_string_date = json_body_date.date;
+    console.log("\nreal_string_date: " + real_string_date); // 2019-03-27
   } else {
     console.log("< 블록을 찾지 못했습니다. >");
     real_string_date = "2000-01-01";
