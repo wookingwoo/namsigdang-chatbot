@@ -131,7 +131,7 @@ apiRouter.post("/menu", async function (req, res) {
   let json_body_date;
   let str_body_date;
 
-  let noMenuMsg = "식단 정보가 없습니다.";
+  let noMenuMsg = "식단 정보가 없습니다. 다른 날짜를 선택해주세요.";
 
   let today = new Date();
 
@@ -195,8 +195,10 @@ apiRouter.post("/menu", async function (req, res) {
     "금요일",
     "토요일",
   ];
-  const today_name = new Date(real_string_date).getDay();
-  const todayLabel = week_name[today_name];
+
+  let requestDate = new Date(real_string_date);
+  const requestDay = requestDate.getDay();
+  const todayLabel = week_name[requestDay];
   const selectedDate = real_string_date + "-" + todayLabel;
 
   let namdo_code_year = real_string_date.substr(0, 4); // 2022
@@ -230,6 +232,11 @@ apiRouter.post("/menu", async function (req, res) {
     recent_visit_date: FieldValue.serverTimestamp(),
     recent_menu_inquiry_date: namdo_code,
   });
+
+  // 최근 3개월 이내의 날짜가 아닌경우 알려주지 않음
+  if (isBeforeOrAfterMonths(requestDate, 3)) {
+    responseSimpleText(res, "최근 3개월 이내의 날짜만 조회 가능합니다.");
+  }
 
   // /menu/Eunpyeong/year_2022/month_03
   const menu_fs = db
@@ -313,6 +320,34 @@ function makeTwoNumber(variable) {
   variable = Number(variable).toString();
   if (Number(variable) < 10 && variable.length === 1) variable = "0" + variable;
   return variable;
+}
+
+function isBeforeOrAfterMonths(requestDate, numMonths) {
+  // 현재 날짜 생성
+  var currentDate = new Date();
+
+  // 현재 날짜에서 지정된 개월 수 이전의 날짜 생성
+  var monthsAgo = new Date();
+  monthsAgo.setMonth(currentDate.getMonth() - numMonths);
+
+  // 현재 날짜에서 지정된 개월 수 이후의 날짜 생성
+  var monthsLater = new Date();
+  monthsLater.setMonth(currentDate.getMonth() + numMonths);
+
+  // 주어진 날짜가 지정된 개월 수 이전의 날짜보다 작으면 "지정된 개월 이전"을 반환
+  if (requestDate < monthsAgo) {
+    // `${numMonths}개월 이전`;
+    return true;
+  }
+
+  // 주어진 날짜가 지정된 개월 수 이후의 날짜보다 크면 "지정된 개월 이후"를 반환
+  if (requestDate > monthsLater) {
+    // `${numMonths}개월 이후`;
+    return true;
+  }
+
+  // 그 외의 경우는 "지정된 개월 이내"
+  return false;
 }
 
 const PORT = 3000;
