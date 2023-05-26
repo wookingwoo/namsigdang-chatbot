@@ -106,7 +106,6 @@ apiRouter.post("/money", function (req, res) {
 });
 
 // ============== 남식당 급식봇 ==============
-// 에러처리필요: 요청값 날짜 파라미터 없는경우 예외처리하기
 apiRouter.post("/menu", async function (req, res) {
   const campus_code = req.query.campus;
   var campus_name;
@@ -125,11 +124,12 @@ apiRouter.post("/menu", async function (req, res) {
     return; // 에러 발생 시 함수 실행 중지
   }
 
+  console.log("\n[req.body 시작]");
+  console.log(req.body);
+  console.log("[req.body 종료]\n");
+
   let json_body_date;
   let str_body_date;
-  console.log("\n<req.body 출력> ");
-
-  console.log(req.body);
 
   let today = new Date();
 
@@ -141,41 +141,6 @@ apiRouter.post("/menu", async function (req, res) {
   now_month = makeTwoNumber(now_month); // 2자리로 표현 (0붙임)
   now_date = makeTwoNumber(now_date); // 2자리로 표현 (0붙임)
 
-  var request_log_dir = "./data";
-  check_and_make_dir(request_log_dir);
-
-  request_log_dir = request_log_dir + "/log";
-  check_and_make_dir(request_log_dir);
-
-  request_log_dir = request_log_dir + "/" + campus_name;
-  check_and_make_dir(request_log_dir);
-
-  request_log_dir = request_log_dir + "/request_body_log";
-  check_and_make_dir(request_log_dir);
-
-  request_log_dir = request_log_dir + `/year_${now_year}`;
-  check_and_make_dir(request_log_dir);
-
-  request_log_dir = request_log_dir + `/mounth_${now_month}`;
-  check_and_make_dir(request_log_dir);
-
-  request_log_dir =
-    request_log_dir +
-    `/${now_year}.${now_month}.${now_date}_request_body_logs.txt`;
-
-  // 로그 파일 쓰기
-  const error_handler = function (error) {
-    if (error) console.log(error);
-    else console.log("log.txt 쓰기 성공!");
-  };
-
-  fs.appendFile(
-    request_log_dir,
-    "\n\n" + JSON.stringify(req.body),
-    "utf8",
-    error_handler
-  );
-
   var block_id = req.body.intent.id;
   console.log("block_id: " + block_id);
   console.log("typeof(block_id): " + typeof block_id);
@@ -183,10 +148,10 @@ apiRouter.post("/menu", async function (req, res) {
   var real_string_date;
 
   let eunpyeong_menu_block_id = "5c9766875f38dd476721bbd2";
-  let eunpyeong_menu_block_name = "main_은평관 식단 알림";
+  let dongjak_menu_block_id = "64414f25e40e9c7542d74785";
 
   if (block_id === eunpyeong_menu_block_id) {
-    console.log("< " + eunpyeong_menu_block_name + " >");
+    console.log("< main_은평관 식단 알림 >");
     str_body_date = req.body.action.params.date.toString();
     json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.date;
@@ -202,6 +167,12 @@ apiRouter.post("/menu", async function (req, res) {
     str_body_date = req.body.action.params.date.toString();
     json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.value;
+    console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
+  } else if (block_id === dongjak_menu_block_id) {
+    console.log("< main_동작관 식단 알림 >");
+    str_body_date = req.body.action.params.date.toString();
+    json_body_date = JSON.parse(str_body_date);
+    real_string_date = json_body_date.date;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   } else {
     console.log("< 블록을 찾지 못했습니다. >");
@@ -320,17 +291,6 @@ apiRouter.post("/menu", async function (req, res) {
 
   res.status(200).send(responseBody);
 });
-
-function check_and_make_dir(dir_path) {
-  // 로그 파일 경로 존재여부 체크
-  const check_log_dir = fs.existsSync(dir_path);
-
-  // 로그파일 경로가 존재하면 true, 없으면 false
-  console.log("로그파일 경로 존재 여부:", check_log_dir);
-
-  // 경로가 존재하지 않는경우 새로 생성
-  if (!check_log_dir) fs.mkdirSync(dir_path);
-}
 
 function makeTwoNumber(variable) {
   variable = Number(variable).toString();
