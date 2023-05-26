@@ -131,6 +131,8 @@ apiRouter.post("/menu", async function (req, res) {
   let json_body_date;
   let str_body_date;
 
+  let noMenuMsg = "식단 정보가 없습니다.";
+
   let today = new Date();
 
   let now_year = today.getFullYear(); // 현재 년도
@@ -240,6 +242,7 @@ apiRouter.post("/menu", async function (req, res) {
   let menuJson = {};
   if (!menu_doc.exists) {
     console.log("No such document!");
+    responseSimpleText(noMenuMsg);
   } else {
     // console.log("Document data:", menu_doc.data());
     menuJson = menu_doc.data();
@@ -255,42 +258,41 @@ apiRouter.post("/menu", async function (req, res) {
     .replace(/\//gi, "&")
     .replace(/,/gi, ", ");
 
-  const error_msg_1 = "식단정보가 없습니다.";
-  const error_msg_2 = "식단정보를 찾을 수 없습니다.";
-
-  if (selectedBreakfastMenu === "") {
-    selectedBreakfastMenu = error_msg_1;
-  } else if (selectedBreakfastMenu == null) {
-    selectedBreakfastMenu = error_msg_2;
+  if (
+    selectedBreakfastMenu === undefined ||
+    selectedBreakfastMenu === "" ||
+    selectedBreakfastMenu === null ||
+    selectedLunchMenu === undefined ||
+    selectedLunchMenu === "" ||
+    selectedLunchMenu === null ||
+    selectedDinnerMenu === undefined ||
+    selectedDinnerMenu === "" ||
+    selectedDinnerMenu === null
+  ) {
+    responseSimpleText(noMenuMsg);
   }
 
-  if (selectedLunchMenu === "") {
-    selectedLunchMenu = error_msg_1;
-  } else if (selectedLunchMenu == null) {
-    selectedLunchMenu = error_msg_2;
-  }
+  responseSimpleText(
+    `[ ${selectedDate} ] 식단 정보 \n<아침>\n${selectedBreakfastMenu}\n<점심>\n${selectedLunchMenu}\n<저녁>\n${selectedDinnerMenu}`
+  );
+});
 
-  if (selectedDinnerMenu === "") {
-    selectedDinnerMenu = error_msg_1;
-  } else if (selectedDinnerMenu == null) {
-    selectedDinnerMenu = error_msg_2;
-  }
-
+function responseSimpleText(responseText) {
   const responseBody = {
     version: "2.0",
-    data: {
-      selectedDate: selectedDate,
-
-      selectedBreakfastMenu: selectedBreakfastMenu,
-      selectedLunchMenu: selectedLunchMenu,
-      selectedDinnerMenu: selectedDinnerMenu,
+    template: {
+      outputs: [
+        {
+          simpleText: {
+            text: responseText,
+          },
+        },
+      ],
     },
   };
-
   console.log("responseBody:", responseBody);
-
   res.status(200).send(responseBody);
-});
+}
 
 function makeTwoNumber(variable) {
   variable = Number(variable).toString();
