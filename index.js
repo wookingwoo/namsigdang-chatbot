@@ -248,33 +248,47 @@ apiRouter.post("/menu", async function (req, res) {
     menuJson = menu_doc.data();
   }
 
-  let selectedBreakfastMenu = menuJson[namdo_code + "a"]
-    .replace(/\//gi, "&")
-    .replace(/,/gi, ", ");
-  let selectedLunchMenu = menuJson[namdo_code + "b"]
-    .replace(/\//gi, "&")
-    .replace(/,/gi, ", ");
-  let selectedDinnerMenu = menuJson[namdo_code + "c"]
-    .replace(/\//gi, "&")
-    .replace(/,/gi, ", ");
+  let selectedBreakfastMenu = menuJson[namdo_code + "a"];
+  let selectedLunchMenu = menuJson[namdo_code + "b"];
+  let selectedDinnerMenu = menuJson[namdo_code + "c"];
 
-  if (
-    selectedBreakfastMenu === undefined ||
-    selectedBreakfastMenu === "" ||
-    selectedBreakfastMenu === null ||
-    selectedLunchMenu === undefined ||
-    selectedLunchMenu === "" ||
-    selectedLunchMenu === null ||
-    selectedDinnerMenu === undefined ||
-    selectedDinnerMenu === "" ||
-    selectedDinnerMenu === null
-  ) {
+  if (selectedBreakfastMenu !== undefined) {
+    selectedBreakfastMenu = selectedBreakfastMenu
+      .replace(/\//gi, "&")
+      .replace(/,/gi, ", ");
+  }
+
+  if (selectedLunchMenu !== undefined) {
+    selectedLunchMenu = selectedLunchMenu
+      .replace(/\//gi, "&")
+      .replace(/,/gi, ", ");
+  }
+
+  if (selectedDinnerMenu !== undefined) {
+    selectedDinnerMenu = selectedDinnerMenu
+      .replace(/\//gi, "&")
+      .replace(/,/gi, ", ");
+  }
+
+  if (!selectedBreakfastMenu && !selectedLunchMenu && !selectedDinnerMenu) {
     responseSimpleText(res, noMenuMsg);
+  }
+
+  if (!selectedBreakfastMenu) {
+    selectedBreakfastMenu = noMenuMsg;
+  }
+
+  if (!selectedLunchMenu) {
+    selectedLunchMenu = noMenuMsg;
+  }
+
+  if (!selectedDinnerMenu) {
+    selectedDinnerMenu = noMenuMsg;
   }
 
   responseSimpleText(
     res,
-    `[ ${selectedDate} ] 식단 정보 \n<아침>\n${selectedBreakfastMenu}\n<점심>\n${selectedLunchMenu}\n<저녁>\n${selectedDinnerMenu}`
+    `${selectedDate} 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`
   );
 });
 
