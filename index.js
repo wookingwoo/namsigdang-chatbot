@@ -295,7 +295,7 @@ apiRouter.post("/menu", async function (req, res) {
 
   responseSimpleText(
     res,
-    `${selectedDate} 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`
+    `'${selectedDate}' 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`
   );
 });
 
@@ -308,6 +308,19 @@ function responseSimpleText(res, responseText) {
           simpleText: {
             text: responseText,
           },
+        },
+      ],
+
+      quickReplies: [
+        {
+          messageText: "메뉴 보기",
+          action: "message",
+          label: "메뉴 보기",
+        },
+        {
+          messageText: "달력에서 선택하기",
+          action: "message",
+          label: "달력에서 선택하기",
         },
       ],
     },
