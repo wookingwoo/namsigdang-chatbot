@@ -242,7 +242,7 @@ apiRouter.post("/menu", async function (req, res) {
   let menuJson = {};
   if (!menu_doc.exists) {
     console.log("No such document!");
-    responseSimpleText(noMenuMsg);
+    responseSimpleText(res, noMenuMsg);
   } else {
     // console.log("Document data:", menu_doc.data());
     menuJson = menu_doc.data();
@@ -269,15 +269,16 @@ apiRouter.post("/menu", async function (req, res) {
     selectedDinnerMenu === "" ||
     selectedDinnerMenu === null
   ) {
-    responseSimpleText(noMenuMsg);
+    responseSimpleText(res, noMenuMsg);
   }
 
   responseSimpleText(
+    res,
     `[ ${selectedDate} ] 식단 정보 \n<아침>\n${selectedBreakfastMenu}\n<점심>\n${selectedLunchMenu}\n<저녁>\n${selectedDinnerMenu}`
   );
 });
 
-function responseSimpleText(responseText) {
+function responseSimpleText(res, responseText) {
   const responseBody = {
     version: "2.0",
     template: {
