@@ -293,22 +293,9 @@ apiRouter.post("/menu", async function (req, res) {
     selectedDinnerMenu = noMenuMsg;
   }
 
-  // responseSimpleText(
-  //   res,
-  //   `<${selectedDate}> 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`
-  // );
-
-  // responseBasicCard(
-  //   res,
-  //   `<${selectedDate}> 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`
-  // );
-
-  responseListCard(
+  responseSimpleTextWithBTN(
     res,
-    selectedDate,
-    selectedBreakfastMenu,
-    selectedLunchMenu,
-    selectedDinnerMenu
+    `<${selectedDate}> 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`
   );
 });
 
@@ -342,101 +329,39 @@ function responseSimpleText(res, responseText) {
   res.status(200).send(responseBody);
 }
 
-function responseBasicCard(res, responseText) {
-  let responseBody = {
+function responseSimpleTextWithBTN(res, responseText) {
+  const responseBody = {
     version: "2.0",
     template: {
       outputs: [
         {
-          basicCard: {
-            title: responseText,
-            description: responseText,
-
-            buttons: [
-              {
-                label: "공유하기",
-                action: "share",
-              },
-            ],
-
-            quickReplies: [
-              {
-                messageText: "메뉴 보기",
-                action: "message",
-                label: "메뉴 보기",
-              },
-              {
-                messageText: "달력에서 선택하기",
-                action: "message",
-                label: "달력에서 선택하기",
-              },
-            ],
+          simpleText: {
+            text: responseText,
           },
         },
       ],
-    },
-  };
 
-  console.log("responseBody:", responseBody);
-  res.status(200).send(responseBody);
-}
-
-function responseListCard(
-  res,
-  selectedDate,
-  selectedBreakfastMenu,
-  selectedLunchMenu,
-  selectedDinnerMenu
-) {
-  let responseBody = {
-    version: "2.0",
-    template: {
-      outputs: [
+      quickReplies: [
         {
-          listCard: {
-            header: {
-              title: `<${selectedDate}> 식단 정보`,
-            },
-            items: [
-              {
-                title: "아침",
-                description: selectedBreakfastMenu,
-              },
-              {
-                title: "점심",
-                description: selectedLunchMenu,
-              },
-              {
-                title: "저녁",
-                description: selectedDinnerMenu,
-              },
-            ],
+          messageText: "메뉴 보기",
+          action: "message",
+          label: "메뉴 보기",
+        },
+        {
+          messageText: "달력에서 선택하기",
+          action: "message",
+          label: "달력에서 선택하기",
+        },
+      ],
 
-            buttons: [
-              {
-                label: "공유하기",
-                action: "share",
-              },
-            ],
-
-            quickReplies: [
-              {
-                messageText: "메뉴 보기",
-                action: "message",
-                label: "메뉴 보기",
-              },
-              {
-                messageText: "달력에서 선택하기",
-                action: "message",
-                label: "달력에서 선택하기",
-              },
-            ],
-          },
+      buttons: [
+        {
+          label: "공유하기",
+          action: "share",
         },
       ],
     },
   };
-
   console.log("responseBody:", responseBody);
   res.status(200).send(responseBody);
 }
