@@ -107,14 +107,27 @@ apiRouter.post("/money", function (req, res) {
 
 // ============== 남식당 급식봇 ==============
 apiRouter.post("/menu", async function (req, res) {
+  let eunpyeong_menu_block_id = "5c9766875f38dd476721bbd2";
+  let eunpyeong_menu_plugin_id = "5cb464ba5f38dd0eeb9c9efd";
+
+  let dongjak_menu_block_id = "64414f25e40e9c7542d74785";
+  let dongjak_menu_plugin_id = "64415080013416338a085398";
+
   const campus_code = req.query.campus;
   var campus_name;
+  var main_menu_block_id;
+  var main_menu_plugin_id;
+
   console.log("campus_code: " + campus_code);
 
   if (campus_code == "eu") {
     campus_name = "Eunpyeong";
+    main_menu_block_id = eunpyeong_menu_block_id;
+    menu_plugin_id = eunpyeong_menu_plugin_id;
   } else if (campus_code == "do") {
     campus_name = "Dongjak";
+    main_menu_block_id = dongjak_menu_block_id;
+    menu_plugin_id = dongjak_menu_plugin_id;
   } else {
     console.log("Query string 'campus' is not valid.");
     res.status(400).send({
@@ -149,9 +162,6 @@ apiRouter.post("/menu", async function (req, res) {
 
   var real_string_date;
 
-  let eunpyeong_menu_block_id = "5c9766875f38dd476721bbd2";
-  let dongjak_menu_block_id = "64414f25e40e9c7542d74785";
-
   if (block_id === eunpyeong_menu_block_id) {
     console.log("< main_은평관 식단 알림 >");
     str_body_date = req.body.action.params.date.toString();
@@ -159,19 +169,25 @@ apiRouter.post("/menu", async function (req, res) {
     real_string_date = json_body_date.date;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   } else if (block_id === "5cb451475f38dd0eeb9c9eaa") {
-    console.log("< 날짜 선택 오타 >");
+    console.log("< [은평관] 날짜 선택 오타 >");
     str_body_date = req.body.action.params.date.toString();
     json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.value;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
-  } else if (block_id === "5cb464ba5f38dd0eeb9c9efd") {
-    console.log("< 플러그인 선택 >");
+  } else if (block_id === eunpyeong_menu_plugin_id) {
+    console.log("< [은평관] 플러그인 선택 >");
     str_body_date = req.body.action.params.date.toString();
     json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.value;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   } else if (block_id === dongjak_menu_block_id) {
     console.log("< main_동작관 식단 알림 >");
+    str_body_date = req.body.action.params.date.toString();
+    json_body_date = JSON.parse(str_body_date);
+    real_string_date = json_body_date.date;
+    console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
+  } else if (block_id === dongjak_menu_plugin_id) {
+    console.log("< [동작관] 플러그인_날짜 선택하기 >");
     str_body_date = req.body.action.params.date.toString();
     json_body_date = JSON.parse(str_body_date);
     real_string_date = json_body_date.date;
@@ -293,13 +309,20 @@ apiRouter.post("/menu", async function (req, res) {
     selectedDinnerMenu = noMenuMsg;
   }
 
-  responseSimpleTextWithBTN(
+  responseSimpleText(
     res,
-    `<${selectedDate}> 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`
+    `<${selectedDate}> 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`,
+    main_menu_block_id,
+    menu_plugin_id
   );
 });
 
-function responseSimpleText(res, responseText) {
+function responseSimpleText(
+  res,
+  responseText,
+  main_menu_block_id,
+  menu_plugin_id
+) {
   const responseBody = {
     version: "2.0",
     template: {
@@ -314,50 +337,15 @@ function responseSimpleText(res, responseText) {
       quickReplies: [
         {
           messageText: "메뉴 보기",
-          action: "message",
+          action: "block",
           label: "메뉴 보기",
+          blockId: main_menu_block_id,
         },
         {
           messageText: "달력에서 선택하기",
-          action: "message",
+          action: "block",
           label: "달력에서 선택하기",
-        },
-      ],
-    },
-  };
-  console.log("responseBody:", responseBody);
-  res.status(200).send(responseBody);
-}
-
-function responseSimpleTextWithBTN(res, responseText) {
-  const responseBody = {
-    version: "2.0",
-    template: {
-      outputs: [
-        {
-          simpleText: {
-            text: responseText,
-          },
-        },
-      ],
-
-      quickReplies: [
-        {
-          messageText: "메뉴 보기",
-          action: "message",
-          label: "메뉴 보기",
-        },
-        {
-          messageText: "달력에서 선택하기",
-          action: "message",
-          label: "달력에서 선택하기",
-        },
-      ],
-
-      buttons: [
-        {
-          label: "공유하기",
-          action: "share",
+          blockId: menu_plugin_id,
         },
       ],
     },
