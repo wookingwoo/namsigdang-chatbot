@@ -293,7 +293,12 @@ apiRouter.post("/menu", async function (req, res) {
     selectedDinnerMenu = noMenuMsg;
   }
 
-  responseSimpleText(
+  // responseSimpleText(
+  //   res,
+  //   `'${selectedDate}' 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`
+  // );
+
+  responseBasicCard(
     res,
     `'${selectedDate}' 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`
   );
@@ -325,6 +330,45 @@ function responseSimpleText(res, responseText) {
       ],
     },
   };
+  console.log("responseBody:", responseBody);
+  res.status(200).send(responseBody);
+}
+
+function responseBasicCard(res, responseText) {
+  let responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          basicCard: {
+            title: responseText,
+            description: responseText,
+
+            buttons: [
+              {
+                label: "공유하기",
+                action: "share",
+              },
+            ],
+
+            quickReplies: [
+              {
+                messageText: "메뉴 보기",
+                action: "message",
+                label: "메뉴 보기",
+              },
+              {
+                messageText: "달력에서 선택하기",
+                action: "message",
+                label: "달력에서 선택하기",
+              },
+            ],
+          },
+        },
+      ],
+    },
+  };
+
   console.log("responseBody:", responseBody);
   res.status(200).send(responseBody);
 }
