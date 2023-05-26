@@ -190,7 +190,7 @@ apiRouter.post("/menu", async function (req, res) {
     console.log("< [동작관] 플러그인_날짜 선택하기 >");
     str_body_date = req.body.action.params.date.toString();
     json_body_date = JSON.parse(str_body_date);
-    real_string_date = json_body_date.date;
+    real_string_date = json_body_date.value;
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   } else {
     console.log("< 블록을 찾지 못했습니다. >");
