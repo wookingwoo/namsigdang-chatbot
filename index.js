@@ -198,7 +198,8 @@ apiRouter.post("/menu", async function (req, res) {
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   }
 
-  if (real_string_date !== null) {
+  if (real_string_date == null) {
+    console.log("올바른 날짜를 입력해주세요.");
     return responseSimpleText(res, "올바른 날짜를 입력해주세요.");
   }
 
