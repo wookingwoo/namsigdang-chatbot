@@ -251,7 +251,8 @@ apiRouter.post("/menu", async function (req, res) {
 
   // 최근 3개월 이내의 날짜가 아닌경우 알려주지 않음
   if (isBeforeOrAfterMonths(requestDate, 3)) {
-    responseSimpleText(res, "최근 3개월 이내의 날짜만 조회 가능합니다.");
+    console.log("최근 3개월 이내의 날짜만 조회 가능합니다.");
+    return responseSimpleText(res, "최근 3개월 이내의 날짜만 조회 가능합니다.");
   }
 
   // /menu/Eunpyeong/year_2022/month_03
@@ -265,7 +266,7 @@ apiRouter.post("/menu", async function (req, res) {
   let menuJson = {};
   if (!menu_doc.exists) {
     console.log("No such document!");
-    responseSimpleText(res, noMenuMsg);
+    return responseSimpleText(res, noMenuMsg);
   } else {
     // console.log("Document data:", menu_doc.data());
     menuJson = menu_doc.data();
@@ -294,7 +295,7 @@ apiRouter.post("/menu", async function (req, res) {
   }
 
   if (!selectedBreakfastMenu && !selectedLunchMenu && !selectedDinnerMenu) {
-    responseSimpleText(res, noMenuMsg);
+    return responseSimpleText(res, noMenuMsg);
   }
 
   if (!selectedBreakfastMenu) {
@@ -309,7 +310,7 @@ apiRouter.post("/menu", async function (req, res) {
     selectedDinnerMenu = noMenuMsg;
   }
 
-  responseSimpleText(
+  return responseSimpleText(
     res,
     `<${selectedDate}> 식단 정보 \n\n[아침]\n${selectedBreakfastMenu}\n\n[점심]\n${selectedLunchMenu}\n\n[저녁]\n${selectedDinnerMenu}`,
     main_menu_block_id,
