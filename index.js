@@ -198,6 +198,10 @@ apiRouter.post("/menu", async function (req, res) {
     console.log("\nreal_string_date 출력: " + real_string_date); // 2019-03-27
   }
 
+  if (real_string_date !== null) {
+    return responseSimpleText(res, "올바른 날짜를 입력해주세요.");
+  }
+
   var user_id = req.body.userRequest.user.id;
   console.log("user_id: " + user_id);
   console.log("typeof user_id: " + typeof user_id);
