@@ -1,7 +1,9 @@
 # namsigdang-chatbot
 
-- namsigdang kakaotalk chatbot: <https://pf.kakao.com/_SeKcj>
-- contact namsigdang: contact@wookingwoo.com
+- namsigdang kakaotalk chatbot (Eunpyeong campus): <https://pf.kakao.com/_SeKcj>
+- namsigdang kakaotalk chatbot (Dongjak campus): <http://pf.kakao.com/_Zhmxkxj>
+
+- contact namsigdang: <contact@wookingwoo.com>
 
 ## Get started in local
 
