@@ -22,3 +22,11 @@ node index.js
 docker build . -t namsigdang-chatbot:1.0
 docker run -i -t -d -p <host port number>:3000 --name namsigdang-chatbot --restart always namsigdang-chatbot:1.0
 ```
+
+## Get started with docker-compose
+
+- docker-compose up [OPTIONS] [SERVICE...]
+
+```bash
+docker-compose up -d
+```

@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  namsigdang-chatbot:
+    build: .
+    image: namsigdang-chatbot
+    container_name: namsigdang-chatbot
+    environment:
+      FIREBASE_TYPE: ${FIREBASE_TYPE}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      FIREBASE_PRIVATE_KEY_ID: ${FIREBASE_PRIVATE_KEY_ID}
+      FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
+      FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
+      FIREBASE_CLIENT_ID: ${FIREBASE_CLIENT_ID}
+      FIREBASE_AUTH_URI: ${FIREBASE_AUTH_URI}
+      FIREBASE_TOKEN_URI: ${FIREBASE_TOKEN_URI}
+      FIREBASE_AUTH_PROVIDER_X509_CERT_URL: ${FIREBASE_AUTH_PROVIDER_X509_CERT_URL}
+      FIREBASE_CLIENT_X509_CERT_URL: ${FIREBASE_CLIENT_X509_CERT_URL}
+    restart: unless-stopped
+    working_dir: /namsigdang_chatbot
+    volumes:
+      - ./data:/namsigdang_chatbot/data
+    ports:
+      - "8004:8000"
+    command: /bin/bash -c "node index.js"
+
+    networks:
+      - wookingwoo-op-bridge
+
+networks:
+  wookingwoo-op-bridge:
+    external: true
