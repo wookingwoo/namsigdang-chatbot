@@ -5,6 +5,11 @@
 
 - contact namsigdang: <contact@wookingwoo.com>
 
+## github
+- namsigdang-crawler: https://github.com/wookingwoo/namsigdang-crawler
+- namsigdang-chatbot: https://github.com/wookingwoo/namsigdang-chatbot
+- namsigdang-android-app: https://github.com/wookingwoo/namsigdang-android-app
+
 ## Get started in local
 
 ```bash
