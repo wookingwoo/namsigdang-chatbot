@@ -5,7 +5,7 @@
 
 - contact namsigdang: <contact@wookingwoo.com>
 
-## github
+## GitHub
 - namsigdang-crawler: https://github.com/wookingwoo/namsigdang-crawler
 - namsigdang-chatbot: https://github.com/wookingwoo/namsigdang-chatbot
 - namsigdang-android-app: https://github.com/wookingwoo/namsigdang-android-app
