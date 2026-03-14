@@ -9,6 +9,7 @@
 - namsigdang-crawler: https://github.com/wookingwoo/namsigdang-crawler
 - namsigdang-chatbot: https://github.com/wookingwoo/namsigdang-chatbot
 - namsigdang-android-app: https://github.com/wookingwoo/namsigdang-android-app
+- namsigdang-app: https://github.com/wookingwoo/namsigdang-app
 
 ## Get started in local
 
